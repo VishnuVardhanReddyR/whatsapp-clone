@@ -7,6 +7,7 @@ import AttachFileIcon from '@material-ui/icons/AttachFile';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import MicIcon from '@material-ui/icons/Mic';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import Message from './Message';
 import firebase from 'firebase/compat/app';
@@ -83,6 +84,7 @@ const ChatScreen = ({ chat, messages }) => {
   return (
     <div className="">
       <header className="flex sticky top-0 bg-white z-10 justify-between items-center p-4 h-20 border-b-[1px] border-[#f5f5f5]">
+            <ArrowBackIcon onClick={router.back} className="text-gray-700 mr-4 cursor-pointer visible sm:invisible" />
             {recipient ? (
                 <Avatar src={recipient?.photoURL} />
               ):(  

@@ -15,7 +15,9 @@ const Chat = ({ chat, messages }) => {
       <Head>
         <title>Chat with {getRecipientEmail(chat.users, user)}</title>
       </Head> 
-      <Sidebar />
+      <div className="hidden md:block">
+        <Sidebar />
+      </div>
       <ChatContainer>
         <ChatScreen chat={chat} messages={messages} />
       </ChatContainer>
