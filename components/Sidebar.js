@@ -39,8 +39,8 @@ const Sidebar = () => {
         );
 
     return (
-        <div>
-            <header className="flex sticky top-0 bg-white z-10 justify-between items-center p-4 h-20 border-b-2 border-[#f5f5f5]">
+        <div className="flex-[0.45] border-r-[1px] border-[#f5f5f5] min-w-72 max-w-80">
+            <header className="flex sticky top-0 bg-white z-10 justify-between items-center p-4 h-20 border-b-[1px] border-[#f5f5f5]">
                 <Avatar src={user.photoURL} onClick={() => auth.signOut()} className="m-3 cursor-pointer hover:opacity-[0.8]"/>
                 <div className="">
                     <IconButton>
