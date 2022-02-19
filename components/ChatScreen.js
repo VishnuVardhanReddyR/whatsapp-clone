@@ -5,7 +5,8 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { Avatar, IconButton } from '@material-ui/core';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
+import { EmojiHappyIcon } from '@heroicons/react/outline';
+import { XIcon } from '@heroicons/react/outline';
 import MicIcon from '@material-ui/icons/Mic';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { useCollection } from 'react-firebase-hooks/firestore';
@@ -13,10 +14,13 @@ import Message from './Message';
 import firebase from 'firebase/compat/app';
 import getRecipientEmail from '../utils/getRecipientEmail';
 import TimeAgo from "timeago-react";
+import { Picker } from "emoji-mart";
+import 'emoji-mart/css/emoji-mart.css'
 
 const ChatScreen = ({ chat, messages }) => {
     const [user] = useAuthState(auth);
     const [input, setInput] = useState("");
+    const [showEmojis, setShowEmojis] = useState(false);
     const endOfMessagesRef = useRef(null);
     const router = useRouter();
     const [messagesSnapshot] = useCollection(
@@ -76,11 +80,25 @@ const ChatScreen = ({ chat, messages }) => {
       });
 
       setInput("");
+      setShowEmojis(false);
       ScrollToBotttom();
     };
 
     const recipient = recipientSnapshot?.docs?.[0]?.data();
     const recipientEmail = getRecipientEmail(chat.users, user);
+
+    const addEmoji = (e) => {
+      let sym = e.unified.split("-");
+      let codesArray = [];
+      sym.forEach((el) => codesArray.push("0x" + el));
+      let emoji = String.fromCodePoint(...codesArray);
+      setInput(input + emoji);
+    };
+
+  const emojiPanel = () => {
+      showEmojis ? setShowEmojis(false) : setShowEmojis(true);
+  } 
+
   return (
     <div className="">
       <header className="flex sticky top-0 bg-white z-10 justify-between items-center p-4 h-20 border-b-[1px] border-[#f5f5f5]">
@@ -118,9 +136,27 @@ const ChatScreen = ({ chat, messages }) => {
             {showMessages()}
             <div ref={endOfMessagesRef} className="mb-14"></div>
       </div>
-
+      {showEmojis && (
+              <div className="shadow-sm border-b fixed border-gray-800 bg-black bottom-0 z-999">
+                  <Picker 
+                      onSelect={addEmoji} 
+                      theme="light"
+                      showPreview={false}
+                      emojiTooltip={true}
+                      title=""
+                  />
+              </div>
+        )}
       <form className="flex items-center p-2 sticky bottom-0 bg-white z-100">
-        <InsertEmoticonIcon />
+        {!showEmojis ? (
+          <IconButton onClick={emojiPanel}>
+            <EmojiHappyIcon className="h-5 w-5 text-gray-500 font-bold"/>
+          </IconButton>
+          ) : (
+          <IconButton onClick={emojiPanel}>
+            <XIcon className="h-5 w-5 text-gray-500 font-bold"/>
+          </IconButton>
+          )}
         <input value={input} onChange={e => setInput(e.target.value)} className="flex-1 outline-none border-none rounded-md p-2 bg-[#f5f5f5] mx-4" />
         <button hidden disabled={!input} type="submit" onClick={sendMessage} >Send Message</button>
         <MicIcon />
